@@ -4,7 +4,7 @@ from shop_and_provider import models
 
 @admin.register(models.Provider)
 class ProviderAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email']
+    list_display = ['user', 'title', 'company', 'email', 'created_add']
 
 
 @admin.register(models.Parameter)
@@ -42,12 +42,7 @@ class ProductProviderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Shop)
 class ShopAdmin(admin.ModelAdmin):
-    list_display = ['name']
-
-
-@admin.register(models.Manager)
-class ManagerAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'shop']
+    list_display = ['user', 'title', 'company', 'email', 'created_add']
 
 
 class OrderPositionInline(admin.TabularInline):
@@ -57,6 +52,6 @@ class OrderPositionInline(admin.TabularInline):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'number', 'manager', 'status', 'created_add']
+    list_display = ['id', 'shop', 'status', 'created_add', 'update_add']
     list_editable = ['status']
     inlines = [OrderPositionInline]

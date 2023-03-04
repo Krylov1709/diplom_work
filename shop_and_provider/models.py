@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -15,20 +16,50 @@ STATUS_ORDER = (
 
 class Provider(models.Model):
     """Поставщик"""
-    name = models.CharField(max_length=50, verbose_name="Название")
-    email = models.CharField(max_length=30, unique=True)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="providers",
+        verbose_name="Пользователь"
+    )
+    title = models.CharField(
+        max_length=50,
+        verbose_name="Название",
+        null=False,
+        blank=False
+    )
+    company = models.CharField(
+        max_length=30,
+        verbose_name="Компания",
+        unique=True,
+        null=False,
+        blank=False
+    )
+    email = models.EmailField(
+        max_length=50,
+        unique=True
+    )
+    created_add = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Время создания"
+    )
 
     class Meta:
         verbose_name = "Поставщик"
         verbose_name_plural = "Поставщики"
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class Category(models.Model):
     """Категория"""
-    title = models.CharField(max_length=50, verbose_name="Название")
+    title = models.CharField(
+        max_length=50,
+        verbose_name="Название",
+        null=False,
+        blank=False
+    )
 
     class Meta:
         verbose_name = "Категория"
@@ -40,7 +71,12 @@ class Category(models.Model):
 
 class Parameter(models.Model):
     """Характеристика"""
-    title = models.CharField(max_length=50, verbose_name="Название")
+    title = models.CharField(
+        max_length=50,
+        verbose_name="Название",
+        null=False,
+        blank=False
+    )
 
     class Meta:
         verbose_name = "Характеристика"
@@ -55,7 +91,9 @@ class Product(models.Model):
     title = models.CharField(
         unique=True,
         max_length=100,
-        verbose_name="Название"
+        verbose_name="Название",
+        null=False,
+        blank=False
     )
     category = models.ForeignKey(
         Category,
@@ -94,7 +132,11 @@ class ParameterInfo(models.Model):
         verbose_name="Товар",
         on_delete=models.CASCADE
     )
-    description = models.TextField(verbose_name="Описание")
+    description = models.TextField(
+        verbose_name="Описание",
+        null=False,
+        blank=False
+    )
 
     class Meta:
         verbose_name = "Описание характеристики"
@@ -116,7 +158,8 @@ class ProductProvider(models.Model):
         related_name="products"
     )
     price = models.PositiveIntegerField(
-        verbose_name="Стоимость"
+        verbose_name="Стоимость",
+        default=0
     )
     status = models.CharField(
         max_length=10,
@@ -128,58 +171,63 @@ class ProductProvider(models.Model):
         auto_now_add=True,
         verbose_name="Время создания"
     )
+    update_add = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Время обновления"
+    )
 
     class Meta:
         verbose_name = "Товар поставщика"
         verbose_name_plural = "Товары постащиков"
 
     def __str__(self):
-        return f'{self.product.title} ({self.provider.name})'
+        return f'{self.product.title} ({self.provider.title})'
 
 
 class Shop(models.Model):
     """Магазин"""
-    name = models.CharField(max_length=50, verbose_name="Название")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="shops",
+        verbose_name="Пользователь"
+    )
+    title = models.CharField(
+        max_length=50,
+        verbose_name="Название",
+        null=False,
+        blank=False
+    )
+    company = models.CharField(
+        max_length=30,
+        unique=True,
+        null=False,
+        blank=False
+    )
+    email = models.EmailField(
+        max_length=50,
+        unique=True
+    )
+    created_add = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Время создания"
+    )
 
     class Meta:
         verbose_name = "Магазин"
         verbose_name_plural = "Магазины"
 
     def __str__(self):
-        return self.name
-
-
-class Manager(models.Model):
-    """Менеджер магазина"""
-    name = models.CharField(max_length=30, verbose_name="Имя")
-    email = models.CharField(max_length=30, unique=True)
-    shop = models.ForeignKey(
-        Shop,
-        verbose_name="Магазин",
-        related_name="manegers",
-        on_delete=models.CASCADE
-    )
-    password = models.CharField(max_length=30, verbose_name="Пароль")
-
-    class Meta:
-        verbose_name = "Менеджер"
-        verbose_name_plural = "Менеджеры"
-
-    def __str__(self):
-        return self.name
+        return self.title
 
 
 class Order(models.Model):
     """Заказ"""
-    number = models.PositiveIntegerField(
-        verbose_name="Номер",
-        unique=True
-    )
-    manager = models.ForeignKey(
-        Manager,
-        verbose_name="Менеджер",
-        related_name="orders",
-        on_delete=models.CASCADE
+    shop = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        verbose_name="Магазин",
+        related_name="orders"
     )
     status = models.CharField(
         max_length=10,
@@ -197,13 +245,17 @@ class Order(models.Model):
         auto_now_add=True,
         verbose_name="Время создания"
     )
+    update_add = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Время обновления"
+    )
 
     class Meta:
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
 
-    # def __str__(self):
-    #     return self.id
+    def __str__(self):
+        return f'{self.id} ({self.shop})'
 
 
 class OrderPosition(models.Model):
@@ -211,12 +263,12 @@ class OrderPosition(models.Model):
     order = models.ForeignKey(
         Order,
         verbose_name="Заказ",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE
     )
     product_provider = models.ForeignKey(
         ProductProvider,
         verbose_name="Товар",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE
     )
     quantity = models.PositiveIntegerField(
         verbose_name="Количество",
