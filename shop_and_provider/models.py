@@ -1,17 +1,50 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
 from django.db import models
 
 
-STATUS_PRODUCT = (
-    ('CLOSED', 'Не доступно'),
-    ('OPEN', 'Доступно')
-)
-
 STATUS_ORDER = (
+    ('BASKET', 'Корзина'),
     ('NEW', 'Новый'),
     ('COMPLETED', 'Завершенный'),
 )
+
+USER_TYPE = (
+    ('PROVIDER', 'Поставщик'),
+    ('SHOP', 'Магазин'),
+    ('GUEST', 'Гость')
+)
+
+
+class User(AbstractUser):
+    """
+    Создаем новую модель пользователя на основе стандартной
+    и дополняем её своими полями
+    """
+    email = models.EmailField(
+        max_length=30,
+        unique=True
+    )
+    type = models.CharField(
+        verbose_name='Тип пользователя',
+        choices=USER_TYPE,
+        max_length=10,
+        default='GUEST'
+    )
+    is_active = models.BooleanField(
+        verbose_name='Активен',
+        default=True,
+    )
+
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = "Список пользователей"
+        ordering = ('email',)
 
 
 class Provider(models.Model):
@@ -25,6 +58,7 @@ class Provider(models.Model):
     title = models.CharField(
         max_length=50,
         verbose_name="Название",
+        unique=True,
         null=False,
         blank=False
     )
@@ -35,13 +69,9 @@ class Provider(models.Model):
         null=False,
         blank=False
     )
-    email = models.EmailField(
-        max_length=50,
-        unique=True
-    )
-    created_add = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Время создания"
+    state = models.BooleanField(
+        verbose_name='Статус получения заказов',
+        default=True
     )
 
     class Meta:
@@ -55,6 +85,7 @@ class Provider(models.Model):
 class Category(models.Model):
     """Категория"""
     title = models.CharField(
+        unique=True,
         max_length=50,
         verbose_name="Название",
         null=False,
@@ -72,6 +103,7 @@ class Category(models.Model):
 class Parameter(models.Model):
     """Характеристика"""
     title = models.CharField(
+        unique=True,
         max_length=50,
         verbose_name="Название",
         null=False,
@@ -107,10 +139,6 @@ class Product(models.Model):
         related_name="products",
         through="ParameterInfo"
     )
-    created_add = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Время создания"
-    )
 
     class Meta:
         verbose_name = "Товар"
@@ -145,35 +173,27 @@ class ParameterInfo(models.Model):
 
 class ProductProvider(models.Model):
     """Товар поставщика"""
-    product = models.ForeignKey(
-        Product,
+    user = models.ForeignKey(
+        User,
         on_delete=models.CASCADE,
-        verbose_name="Товар",
-        related_name="providers"
+        related_name="products_provider",
+        verbose_name="Пользователь"
     )
     provider = models.ForeignKey(
         Provider,
         on_delete=models.CASCADE,
-        verbose_name="Поставщик",
-        related_name="products"
+        verbose_name='Поставщик',
+        related_name='products_provider'
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name="Товар",
+        related_name="products_provider"
     )
     price = models.PositiveIntegerField(
         verbose_name="Стоимость",
         default=0
-    )
-    status = models.CharField(
-        max_length=10,
-        verbose_name="Статус",
-        choices=STATUS_PRODUCT,
-        default="CLOSED"
-    )
-    created_add = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Время создания"
-    )
-    update_add = models.DateTimeField(
-        auto_now=True,
-        verbose_name="Время обновления"
     )
 
     class Meta:
@@ -181,7 +201,7 @@ class ProductProvider(models.Model):
         verbose_name_plural = "Товары постащиков"
 
     def __str__(self):
-        return f'{self.product.title} ({self.provider.title})'
+        return f'{self.product} ({self.provider})'
 
 
 class Shop(models.Model):
@@ -204,14 +224,6 @@ class Shop(models.Model):
         null=False,
         blank=False
     )
-    email = models.EmailField(
-        max_length=50,
-        unique=True
-    )
-    created_add = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Время создания"
-    )
 
     class Meta:
         verbose_name = "Магазин"
@@ -223,6 +235,12 @@ class Shop(models.Model):
 
 class Order(models.Model):
     """Заказ"""
+    user = models.ForeignKey(
+        User,
+        verbose_name="Пользователь",
+        related_name="orders",
+        on_delete=models.CASCADE
+    )
     shop = models.ForeignKey(
         Shop,
         on_delete=models.CASCADE,
@@ -233,7 +251,7 @@ class Order(models.Model):
         max_length=10,
         verbose_name="Статус",
         choices=STATUS_ORDER,
-        default="NEW"
+        default="BASKET"
     )
     products_provider = models.ManyToManyField(
         ProductProvider,
