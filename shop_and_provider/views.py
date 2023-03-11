@@ -51,3 +51,25 @@ class ShopViewSet(ModelViewSet):
             return [IsAuthenticated(), IsShop()]
         return [IsAuthenticated(), IsOwner()]
 
+
+class ProductProviderViewSet(ModelViewSet):
+    queryset = ProductProvider.objects.all()
+    serializer_class = serializers.ProductProviderSerializer
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_permissions(self):
+        """
+        Устанавливаем разрешения для методов.
+        GET может использовать любой пользователь
+        POST может использовать только авторизованный пользователь с типом Поставщик
+        PATCH и DELETE может использовать только авторизованный пользователь, который создал товар
+        :return:
+        """
+        if self.request.method == 'GET':
+            return []
+        if self.request.method == 'POST':
+            return [IsAuthenticated(), IsProvider()]
+        return [IsAuthenticated(), IsOwner()]

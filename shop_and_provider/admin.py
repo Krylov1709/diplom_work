@@ -8,22 +8,22 @@ from shop_and_provider.models import User
 class MyUserAdmin(UserAdmin):
     model = User
     fieldsets = (("User", {"fields": ("type",)}),) + auth.admin.UserAdmin.fieldsets
-    list_display = ['username', 'email', 'type', 'is_active']
+    list_display = ['id', 'username', 'email', 'type', 'is_active']
 
 
 @admin.register(models.Provider)
 class ProviderAdmin(admin.ModelAdmin):
-    list_display = ['user', 'title', 'company', 'state']
+    list_display = ['id', 'user', 'title', 'company', 'state']
 
 
 @admin.register(models.Parameter)
 class ParameterAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['id', 'title']
 
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['id', 'title']
 
 
 class ParameterInfoInline(admin.TabularInline):
@@ -33,7 +33,7 @@ class ParameterInfoInline(admin.TabularInline):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category']
+    list_display = ['id', 'title', 'category']
     inlines = [ParameterInfoInline]
 
 
@@ -44,7 +44,7 @@ class ProductProviderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Shop)
 class ShopAdmin(admin.ModelAdmin):
-    list_display = ['user', 'title', 'company']
+    list_display = ['id', 'user', 'title', 'company']
 
 
 class OrderPositionInline(admin.TabularInline):
