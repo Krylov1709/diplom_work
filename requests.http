@@ -1,1 +1,207 @@
-GET http://localhost:8000/auth/
+# Создание пользователя
+POST http://localhost:8000/auth/users/
+Content-Type: application/json
+
+{
+    "username": "contact5",
+    "email": "contact5@mail.ru",
+    "password": "user5user5",
+}
+
+###
+
+# Получение токена для пользователя
+POST http://localhost:8000/auth/token/login/
+Content-Type: application/json
+
+{
+    "username": "contact4",
+    "password": "user4user4"
+}
+
+###
+--------------------------------------------------------------
+####
+
+# Получение поставщиков
+GET http://localhost:8000/api/provider/5
+
+###
+
+# Создание Поставщика
+POST http://localhost:8000/api/provider/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "title": "Мир Электроники",
+    "company": "ИП Кортин"
+}
+
+###
+
+# Изменение данных Поставщика
+PATCH  http://localhost:8000/api/provider/1/
+Content-Type: application/json
+Authorization: Token c41e3eb2c0aad699dfa3be70b2c5a6fc7b7efaf0
+
+{
+    "title": "Поставщик Электроники"
+}
+
+###
+
+# Удаление Поставщика
+DELETE  http://localhost:8000/api/provider/2/
+Authorization: Token c41e3eb2c0aad699dfa3be70b2c5a6fc7b7efaf0
+
+###
+--------------------------------------------------------------
+####
+
+# Получение Магазинов
+GET http://localhost:8000/api/shop
+
+###
+
+# Создание Магазина
+POST http://localhost:8000/api/shop/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "title": "Связной",
+    "company": "ИП Колосов"
+}
+
+###
+
+# Изменение данных Магазина
+PATCH  http://localhost:8000/api/shop/1/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "company": "ИП Колосов Александр Олегович"
+}
+
+###
+
+# Удаление Магазина
+DELETE  http://localhost:8000/api/shop/1/
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+###
+--------------------------------------------------------------
+####
+
+# Получение всех товаров
+GET http://localhost:8000/api/product_provider
+
+###
+
+# Создание товара поставщиком
+POST http://localhost:8000/api/product_provider/
+Content-Type: application/json
+Authorization: Token c41e3eb2c0aad699dfa3be70b2c5a6fc7b7efaf0
+
+{
+    "provider": 5,
+    "product": 1,
+    "price": 130000
+}
+
+###
+
+# Изменение товара поставщиком
+PATCH  http://localhost:8000/api/product_provider/6/
+Content-Type: application/json
+Authorization: Token c41e3eb2c0aad699dfa3be70b2c5a6fc7b7efaf0
+
+{
+    "price": 135000
+}
+
+###
+
+# Удаление товара поставщиком
+DELETE   http://localhost:8000/api/product_provider/5/
+Authorization: Token c41e3eb2c0aad699dfa3be70b2c5a6fc7b7efaf0
+
+###
+--------------------------------------------------------------
+####
+
+# Получение всех заказов
+GET http://localhost:8000/api/order
+
+###
+
+# Создание заказа магазином
+POST http://localhost:8000/api/order/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "shop": 2,
+    "status": "BASKET"
+}
+
+###
+
+# Изменение заказа магазином
+PATCH  http://localhost:8000/api/order/4/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "status": "BASKET"
+}
+
+###
+
+# Удаление заказа магазином
+DELETE   http://localhost:8000/api/order/2/
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+###
+--------------------------------------------------------------
+####
+
+# Получение позиций в заказе
+GET http://localhost:8000/api/order_position/
+
+###
+
+# Добавление товара поставщика в заказ магазином
+POST http://localhost:8000/api/order_position/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "order": 1,
+    "product_provider": 6,
+    "quantity": 2
+}
+
+###
+
+# Изменение колличества товара поставщика в заказе магазином
+PATCH  http://localhost:8000/api/order_position/21/
+Content-Type: application/json
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+{
+    "quantity": 4
+}
+
+###
+
+# Удаление товара поставщика в заказе магазином
+DELETE   http://localhost:8000/api/order_position/22/
+Authorization: Token 9cb1d825b71ac1c35bb36d49ec19255ae8ef97d8
+
+###
+--------------------------------------------------------------
+####
+

@@ -1,0 +1,198 @@
+[
+  {
+    "model": "shop_and_provider.user",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$zkt9YcpUpKLyEBOfC7r7Ky$S9zXWXnQp2I92YbDG9RogQSrNvxMObRVm3/KRat5JbU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "contact01",
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "date_joined": "2023-03-14T20:13:37Z",
+      "email": "contact01@mail.ru",
+      "type": "GUEST",
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "shop_and_provider.user",
+    "pk": 12,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$NDDFWUVYiDF1RbNEs4q75g$lLTwwG8qneWAeHzn/03JXWjfq3fkgqIYeVmjyGEDSjc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "contact02",
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "date_joined": "2023-03-14T20:32:55Z",
+      "email": "contact02@mail.ru",
+      "type": "GUEST",
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "shop_and_provider.user",
+    "pk": 14,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$z65lTLF7SVnFRHEpZ72FVB$II2E/TyTzkHfW9J224d0VOFM8OFQc1paTFwVb5YWpDw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "contact03",
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "date_joined": "2023-03-14T20:37:39Z",
+      "email": "contact03@mail.ru",
+      "type": "GUEST",
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "shop_and_provider.provider",
+    "pk": 1,
+    "fields": {
+      "user": 8,
+      "title": "Поставщик Электроники",
+      "company": "OOOЭлектрон",
+      "state": true
+    }
+  },
+  {
+    "model": "shop_and_provider.provider",
+    "pk": 2,
+    "fields": {
+      "user": 12,
+      "title": "Мир Электроники",
+      "company": "ООО Мир",
+      "state": false
+    }
+  },
+  {
+    "model": "shop_and_provider.category",
+    "pk": 1,
+    "fields": {
+      "title": "Смартфоны"
+    }
+  },
+  {
+    "model": "shop_and_provider.category",
+    "pk": 2,
+    "fields": {
+      "title": "Наушники"
+    }
+  },
+  {
+    "model": "shop_and_provider.parameter",
+    "pk": 1,
+    "fields": {
+      "title": "Цвет"
+    }
+  },
+  {
+    "model": "shop_and_provider.parameter",
+    "pk": 2,
+    "fields": {
+      "title": "Вес"
+    }
+  },
+  {
+    "model": "shop_and_provider.product",
+    "pk": 1,
+    "fields": {
+      "title": "Samsung Galaxy S23",
+      "category": 1
+    }
+  },
+  {
+    "model": "shop_and_provider.product",
+    "pk": 2,
+    "fields": {
+      "title": "Galaxy Buds+",
+      "category": 2
+    }
+  },
+  {
+    "model": "shop_and_provider.parameterinfo",
+    "pk": 1,
+    "fields": {
+      "parameter": 1,
+      "product": 1,
+      "description": "Белый"
+    }
+  },
+  {
+    "model": "shop_and_provider.parameterinfo",
+    "pk": 2,
+    "fields": {
+      "parameter": 2,
+      "product": 1,
+      "description": "1 кг"
+    }
+  },
+  {
+    "model": "shop_and_provider.parameterinfo",
+    "pk": 3,
+    "fields": {
+      "parameter": 1,
+      "product": 2,
+      "description": "Черный"
+    }
+  },
+  {
+    "model": "shop_and_provider.parameterinfo",
+    "pk": 4,
+    "fields": {
+      "parameter": 2,
+      "product": 2,
+      "description": "0,1 кг"
+    }
+  },
+  {
+    "model": "shop_and_provider.productprovider",
+    "pk": 1,
+    "fields": {
+      "user": 8,
+      "provider": 1,
+      "product": 1,
+      "price": 125000
+    }
+  },
+  {
+    "model": "shop_and_provider.productprovider",
+    "pk": 2,
+    "fields": {
+      "user": 8,
+      "provider": 1,
+      "product": 2,
+      "price": 20000
+    }
+  },
+  {
+    "model": "shop_and_provider.productprovider",
+    "pk": 3,
+    "fields": {
+      "user": 12,
+      "provider": 2,
+      "product": 1,
+      "price": 130000
+    }
+  },
+  {
+    "model": "shop_and_provider.shop",
+    "pk": 1,
+    "fields": {
+      "user": 14,
+      "title": "Связной",
+      "company": "ИП Савинов"
+    }
+  }
+]
