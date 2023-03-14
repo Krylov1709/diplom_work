@@ -2,4 +2,4 @@
 venv/
 db.sqlite3
 __pycache__/
-shop_and_provider/migrations
+#shop_and_provider/migrations
